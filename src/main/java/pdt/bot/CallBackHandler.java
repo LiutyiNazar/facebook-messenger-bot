@@ -236,7 +236,7 @@ public class CallBackHandler {
             final String messageId = event.getMid();
             final String quickReplyPayload = event.getQuickReply().getPayload();
 
-            logger.info("Received quick reply  '{}' with payload '{}'", messageId, quickReplyPayload);
+            logger.info("Received quick reply '{}' with payload '{}'", messageId, quickReplyPayload);
 
 
             try {
