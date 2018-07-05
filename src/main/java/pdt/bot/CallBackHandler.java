@@ -189,53 +189,9 @@ public class CallBackHandler {
             link.add(("http://www.lyricsfreak.com".concat(hreff)));
         }
 
-        String countResult = doc.select("ul.results").first().ownText();
-        Elements searchResult = doc.select("li.data-topic-id");
+        String a = (artists.get(0)+ "\n" +songs.get(0)+"\n" +link.get(0));
 
-        final List<Button> firstLink = Button.newListBuilder()
-                .addUrlButton("Open Link", link.get(0)).toList()
-                .build();
-        final List<Button> secondLink = Button.newListBuilder()
-                .addUrlButton("Open Link", link.get(1)).toList()
-                .build();
-        final List<Button> thirdtLink = Button.newListBuilder()
-                .addUrlButton("Open Link", link.get(2)).toList()
-                .build();
-        final List<Button> searchLink = Button.newListBuilder()
-                .addUrlButton("Open Link", (URL).concat(keyword)).toList()
-                .build();
-
-
-        final GenericTemplate genericTemplate = GenericTemplate.newBuilder()
-                .addElements()
-                .addElement(artists.get(0))
-                .subtitle(songs.get(0))
-                .itemUrl(link.get(0))
-                .imageUrl("http://pngimg.com/uploads/music_notes/music_notes_PNG58.png")
-                .buttons(firstLink)
-                .toList()
-                .addElement(artists.get(1))
-                .subtitle(songs.get(1))
-                .itemUrl(link.get(1))
-                .imageUrl("http://pngimg.com/uploads/music_notes/music_notes_PNG58.png")
-                .buttons(secondLink)
-                .toList()
-                .addElement(artists.get(2))
-                .subtitle(songs.get(2))
-                .itemUrl(link.get(2))
-                .imageUrl("http://pngimg.com/uploads/music_notes/music_notes_PNG58.png")
-                .buttons(thirdtLink)
-                .toList()
-                .addElement("All results " + countResult)
-                .subtitle("Search result")
-                .itemUrl(("https://www.britannica.com/search?query=").concat(keyword))
-                .imageUrl("http://pngimg.com/uploads/music_notes/music_notes_PNG58.png")
-                .buttons(searchLink)
-                .toList()
-                .done()
-                .build();
-
-        this.sendClient.sendTemplate(recipientId, genericTemplate);
+        this.sendClient.sendTextMessage(recipientId, a);
     }
 
     private void sendTypingOn(String recipientId) throws MessengerApiException, MessengerIOException {
