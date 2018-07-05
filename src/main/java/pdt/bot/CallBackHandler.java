@@ -115,7 +115,7 @@ public class CallBackHandler {
 
                     case "hi":
                     case "hello":
-                        sendTextMessage(senderId, "Hello, I can help you to find music lyrics ? Type name of artist or song title");
+                        sendTextMessage(senderId, "Hello, I can help you to find music lyrics! " + "\n" + "Type name of artist or song title in english");
                         break;
                     case "great":
                     case "ty":
@@ -123,7 +123,7 @@ public class CallBackHandler {
                         break;
                     case "bye":
                     case "bb":
-                        sendTextMessage(senderId, "Have a nice day! Please come back, it was a pleasure to communicate");
+                        sendTextMessage(senderId, "Have a nice day! Please come back, it was a pleasure to help you");
                         break;
 
                     default:
@@ -186,7 +186,7 @@ public class CallBackHandler {
         }
         ((ArrayList<String>) artists).trimToSize();
         if (artists.isEmpty()) {
-            this.sendClient.sendTextMessage(recipientId, "Please use only English language, ty ;)");
+            this.sendClient.sendTextMessage(recipientId, "Sorry! But I did not find such a song :(" + "\n" + " Try again ;)");
         } else {
             String a = (songs.get(0) + "\n" + link.get(0));
             this.sendClient.sendTextMessage(recipientId, a);
