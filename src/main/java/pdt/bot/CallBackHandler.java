@@ -164,14 +164,14 @@ public class CallBackHandler {
 
     private void sendTwitterRessult(String recipientId, String keyword) throws MessengerApiException, MessengerIOException, IOException {
 
-        Document doc = Jsoup.connect(("https://en.wikipedia.org/wiki/").concat(keyword)).get();
-        String countResult = doc.select("div.search-results--count").first().ownText();
-        Elements searchResult = doc.select("section.search-result");
+        Document doc = Jsoup.connect(("https://www.britannica.com/search?query=").concat(keyword)).get();
+        String countResult = doc.select("ul.results").first().ownText();
+        Elements searchResult = doc.select("li.data-topic-id");
         List<SearchResult> searchResults = searchResult.stream().map(element ->
                 new SearchResult(element.select("a").first().ownText(),
                         element.select("a").first().absUrl("href"),
-                        element.select("div.search-result--subtitle").first().ownText(),
-                        element.select("div.search-result--summary").first().ownText())
+                        element.select("p").first().ownText(),
+                        element.select("p").last().ownText())
         ).limit(3).collect(Collectors.toList());
 
         final List<Button> firstLink = Button.newListBuilder()
@@ -184,7 +184,7 @@ public class CallBackHandler {
                 .addUrlButton("Open Link", searchResults.get(2).getLink()).toList()
                 .build();
         final List<Button> searchLink = Button.newListBuilder()
-                .addUrlButton("Open Link", ("https://en.wikipedia.org/wiki/").concat(keyword)).toList()
+                .addUrlButton("Open Link", ("https://www.britannica.com/search?query=").concat(keyword)).toList()
                 .build();
 
 
@@ -209,8 +209,8 @@ public class CallBackHandler {
                 .buttons(thirdtLink)
                 .toList()
                 .addElement("All results " + countResult)
-                .subtitle("Wiki Search result")
-                .itemUrl(("https://en.wikipedia.org/wiki/").concat(keyword))
+                .subtitle("Search result")
+                .itemUrl(("https://www.britannica.com/search?query=").concat(keyword))
                 .imageUrl("https://vignette.wikia.nocookie.net/tvpedia/images/1/12/Wikipedia.png/revision/latest?cb=20120705121051&path-prefix=ru")
                 .buttons(searchLink)
                 .toList()
