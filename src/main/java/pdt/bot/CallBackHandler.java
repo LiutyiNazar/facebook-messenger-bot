@@ -115,11 +115,7 @@ public class CallBackHandler {
 
                     case "hi":
                     case "hello":
-                        sendTextMessage(senderId, "Hello, What I can do for you ? Type the word you're looking for");
-                        break;
-                    case "привіт":
-                    case "доброго дня":
-                        sendTextMessage(senderId, "Привіт, Чим я можу допомогти? Напиши що саме ти шукаєш");
+                        sendTextMessage(senderId, "Hello, I can help you to find music lyrics ? Type name of artist or song title");
                         break;
                     case "great":
                     case "ty":
@@ -165,33 +161,34 @@ public class CallBackHandler {
     private void sendLyricRessult(String recipientId, String keyword) throws MessengerApiException, MessengerIOException, IOException {
         String URL = "http://www.lyricsfreak.com/search.php?a=search&type=song&q=";
 
+        if(keyword.matches("[\\s\\p{L}\\p{M}&&[^\\p{Alpha}]]+")) {
+            List<String> artists = new ArrayList<String>();
+            List<String> songs = new ArrayList<String>();
+            List<String> link = new ArrayList<String>();
 
-        List<String> artists = new ArrayList<String>();
-        List<String> songs = new ArrayList<String>();
-        List<String> link = new ArrayList<String>();
-
-        Document doc = Jsoup.connect(URL + keyword)
-                .referrer(URL + keyword).get();
-        for (Element tracks : doc.select("td.colfirst")) {
-            for (Element links : tracks.getElementsByTag("a")) {
-                artists.add(links.text());
+            Document doc = Jsoup.connect(URL + keyword)
+                    .referrer(URL + keyword).get();
+            for (Element tracks : doc.select("td.colfirst")) {
+                for (Element links : tracks.getElementsByTag("a")) {
+                    artists.add(links.text());
+                }
             }
-        }
 
-        for (Element tracks : doc.select("td > a.song")) {
-            for (Element links : tracks.getElementsByTag("a")) {
-                songs.add(links.text());
+            for (Element tracks : doc.select("td > a.song")) {
+                for (Element links : tracks.getElementsByTag("a")) {
+                    songs.add(links.text());
+                }
             }
-        }
 
-        for (Element tracks : doc.select("a.song")) {
-            String hreff = tracks.attr("href");
-            link.add(("http://www.lyricsfreak.com".concat(hreff)));
-        }
+            for (Element tracks : doc.select("a.song")) {
+                String hreff = tracks.attr("href");
+                link.add(("http://www.lyricsfreak.com".concat(hreff)));
+            }
 
-        String a = (artists.get(0)+ "\n" +songs.get(0)+"\n" +link.get(0));
+            String a = (songs.get(0) + "\n" + link.get(0));
 
-        this.sendClient.sendTextMessage(recipientId, a);
+            this.sendClient.sendTextMessage(recipientId, a);
+        }else this.sendClient.sendTextMessage(recipientId, "Please use only English language, ty ;)");
     }
 
     private void sendTypingOn(String recipientId) throws MessengerApiException, MessengerIOException {
