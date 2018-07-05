@@ -10,7 +10,7 @@ import com.github.messenger4j.receive.handlers.*;
 import com.github.messenger4j.send.*;
 import com.github.messenger4j.send.buttons.Button;
 import com.github.messenger4j.send.templates.GenericTemplate;
-import pdt.bot.domain.SearchResult;
+import org.jsoup.nodes.Element;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -23,9 +23,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/callback")
@@ -133,7 +133,7 @@ public class CallBackHandler {
                     default:
                         sendReadReceipt(senderId);
                         sendTypingOn(senderId);
-                        sendTwitterRessult(senderId, messageText);
+                        sendLyricRessult(senderId, messageText);
                         sendQuickReply(senderId);
                         sendTypingOff(senderId);
                 }
@@ -162,56 +162,74 @@ public class CallBackHandler {
         this.sendClient.sendSenderAction(recipientId, SenderAction.MARK_SEEN);
     }
 
-    private void sendTwitterRessult(String recipientId, String keyword) throws MessengerApiException, MessengerIOException, IOException {
+    private void sendLyricRessult(String recipientId, String keyword) throws MessengerApiException, MessengerIOException, IOException {
+        String URL = "http://www.lyricsfreak.com/search.php?a=search&type=song&q=";
 
-        Document doc = Jsoup.connect(("https://www.britannica.com/search?query=").concat(keyword)).get();
+
+        List<String> artists = new ArrayList<String>();
+        List<String> songs = new ArrayList<String>();
+        List<String> link = new ArrayList<String>();
+
+        Document doc = Jsoup.connect(URL + keyword)
+                .referrer(URL + keyword).get();
+        for (Element tracks : doc.select("td.colfirst")) {
+            for (Element links : tracks.getElementsByTag("a")) {
+                artists.add(links.text());
+            }
+        }
+
+        for (Element tracks : doc.select("td > a.song")) {
+            for (Element links : tracks.getElementsByTag("a")) {
+                songs.add(links.text());
+            }
+        }
+
+        for (Element tracks : doc.select("a.song")) {
+            String hreff = tracks.attr("href");
+            link.add(("http://www.lyricsfreak.com".concat(hreff)));
+        }
+
         String countResult = doc.select("ul.results").first().ownText();
         Elements searchResult = doc.select("li.data-topic-id");
-        List<SearchResult> searchResults = searchResult.stream().map(element ->
-                new SearchResult(element.select("a").first().ownText(),
-                        element.select("a").first().absUrl("href"),
-                        element.select("p").first().ownText(),
-                        element.select("p").last().ownText())
-        ).limit(3).collect(Collectors.toList());
 
         final List<Button> firstLink = Button.newListBuilder()
-                .addUrlButton("Open Link", searchResults.get(0).getLink()).toList()
+                .addUrlButton("Open Link", link.get(0)).toList()
                 .build();
         final List<Button> secondLink = Button.newListBuilder()
-                .addUrlButton("Open Link", searchResults.get(1).getLink()).toList()
+                .addUrlButton("Open Link", link.get(1)).toList()
                 .build();
         final List<Button> thirdtLink = Button.newListBuilder()
-                .addUrlButton("Open Link", searchResults.get(2).getLink()).toList()
+                .addUrlButton("Open Link", link.get(2)).toList()
                 .build();
         final List<Button> searchLink = Button.newListBuilder()
-                .addUrlButton("Open Link", ("https://www.britannica.com/search?query=").concat(keyword)).toList()
+                .addUrlButton("Open Link", (URL).concat(keyword)).toList()
                 .build();
 
 
         final GenericTemplate genericTemplate = GenericTemplate.newBuilder()
                 .addElements()
-                .addElement(searchResults.get(0).getTitle())
-                .subtitle(searchResults.get(0).getSubtitle())
-                .itemUrl(searchResults.get(0).getLink())
-                .imageUrl("https://vignette.wikia.nocookie.net/tvpedia/images/1/12/Wikipedia.png/revision/latest?cb=20120705121051&path-prefix=ru")
+                .addElement(artists.get(0))
+                .subtitle(songs.get(0))
+                .itemUrl(link.get(0))
+                .imageUrl("http://pngimg.com/uploads/music_notes/music_notes_PNG58.png")
                 .buttons(firstLink)
                 .toList()
-                .addElement(searchResults.get(1).getTitle())
-                .subtitle(searchResults.get(1).getSubtitle())
-                .itemUrl(searchResults.get(1).getLink())
-                .imageUrl("https://vignette.wikia.nocookie.net/tvpedia/images/1/12/Wikipedia.png/revision/latest?cb=20120705121051&path-prefix=ru")
+                .addElement(artists.get(1))
+                .subtitle(songs.get(1))
+                .itemUrl(link.get(1))
+                .imageUrl("http://pngimg.com/uploads/music_notes/music_notes_PNG58.png")
                 .buttons(secondLink)
                 .toList()
-                .addElement(searchResults.get(2).getTitle())
-                .subtitle(searchResults.get(2).getSubtitle())
-                .itemUrl(searchResults.get(2).getLink())
-                .imageUrl("https://vignette.wikia.nocookie.net/tvpedia/images/1/12/Wikipedia.png/revision/latest?cb=20120705121051&path-prefix=ru")
+                .addElement(artists.get(2))
+                .subtitle(songs.get(2))
+                .itemUrl(link.get(2))
+                .imageUrl("http://pngimg.com/uploads/music_notes/music_notes_PNG58.png")
                 .buttons(thirdtLink)
                 .toList()
                 .addElement("All results " + countResult)
                 .subtitle("Search result")
                 .itemUrl(("https://www.britannica.com/search?query=").concat(keyword))
-                .imageUrl("https://vignette.wikia.nocookie.net/tvpedia/images/1/12/Wikipedia.png/revision/latest?cb=20120705121051&path-prefix=ru")
+                .imageUrl("http://pngimg.com/uploads/music_notes/music_notes_PNG58.png")
                 .buttons(searchLink)
                 .toList()
                 .done()

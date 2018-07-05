@@ -2,24 +2,16 @@ package pdt.bot.domain;
 
 public class SearchResult {
 
-    String title;
     String link;
-    String subtitle;
-    String summary;
+    String song;
+   // String subtitle;
+   // String summary;
 
-    public SearchResult(String title, String link, String subtitle, String summary) {
-        this.title = title;
+    public SearchResult(String link, String song, String subtitle, String summary) {
         this.link = link;
-        this.subtitle = subtitle;
-        this.summary = summary;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
+        this.song = song;
+       /* this.subtitle = subtitle;
+        this.summary = summary;*/
     }
 
     public String getLink() {
@@ -30,7 +22,15 @@ public class SearchResult {
         this.link = link;
     }
 
-    public String getSubtitle() {
+    public String getSong() {
+        return song;
+    }
+
+    public void setSong(String song) {
+        this.song = song;
+    }
+
+    /*public String getSubtitle() {
         return subtitle;
     }
 
@@ -44,5 +44,5 @@ public class SearchResult {
 
     public void setSummary(String summary) {
         this.summary = summary;
-    }
+    }*/
 }

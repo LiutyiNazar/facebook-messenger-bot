@@ -22,5 +22,6 @@ public class PdtBotApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(PdtBotApplication.class, args);
+
     }
 }
