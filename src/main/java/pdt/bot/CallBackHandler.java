@@ -32,8 +32,6 @@ import java.util.stream.Collectors;
 public class CallBackHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(CallBackHandler.class);
-    private static final String RESOURCE_URL =
-            "https://raw.githubusercontent.com/fbsamples/messenger-platform-samples/master/node/public";
     public static final String GOOD_ACTION = "DEVELOPER_DEFINED_PAYLOAD_FOR_GOOD_ACTION";
     public static final String NOT_GOOD_ACTION = "DEVELOPER_DEFINED_PAYLOAD_FOR_NOT_GOOD_ACTION";
 
@@ -135,12 +133,14 @@ public class CallBackHandler {
                     default:
                         sendReadReceipt(senderId);
                         sendTypingOn(senderId);
-                       // sendTwitterRessult(senderId, messageText);
+                        sendTwitterRessult(senderId, messageText);
                         sendQuickReply(senderId);
                         sendTypingOff(senderId);
                 }
             } catch (MessengerApiException | MessengerIOException e) {
                 handleSendException(e);
+            } catch (IOException e) {
+                handleIOException(e);
             }
         };
     }
@@ -162,9 +162,9 @@ public class CallBackHandler {
         this.sendClient.sendSenderAction(recipientId, SenderAction.MARK_SEEN);
     }
 
-   /* private void sendTwitterRessult(String recipientId, String keyword) throws MessengerApiException, MessengerIOException, IOException {
+    private void sendTwitterRessult(String recipientId, String keyword) throws MessengerApiException, MessengerIOException, IOException {
 
-        Document doc = Jsoup.connect(("https://twitter.com/search?q=").concat(keyword)).get();
+        Document doc = Jsoup.connect(("https://en.wikipedia.org/wiki/").concat(keyword)).get();
         String countResult = doc.select("div.search-results--count").first().ownText();
         Elements searchResult = doc.select("section.search-result");
         List<SearchResult> searchResults = searchResult.stream().map(element ->
@@ -184,7 +184,7 @@ public class CallBackHandler {
                 .addUrlButton("Open Link", searchResults.get(2).getLink()).toList()
                 .build();
         final List<Button> searchLink = Button.newListBuilder()
-                .addUrlButton("Open Link", ("https://twitter.com/search?q=").concat(keyword)).toList()
+                .addUrlButton("Open Link", ("https://en.wikipedia.org/wiki/").concat(keyword)).toList()
                 .build();
 
 
@@ -193,32 +193,32 @@ public class CallBackHandler {
                 .addElement(searchResults.get(0).getTitle())
                 .subtitle(searchResults.get(0).getSubtitle())
                 .itemUrl(searchResults.get(0).getLink())
-                .imageUrl("https://firstdraftnews.org/wp-content/uploads/2015/11/Hero-Twitter-search.png")
+                .imageUrl("https://vignette.wikia.nocookie.net/tvpedia/images/1/12/Wikipedia.png/revision/latest?cb=20120705121051&path-prefix=ru")
                 .buttons(firstLink)
                 .toList()
                 .addElement(searchResults.get(1).getTitle())
                 .subtitle(searchResults.get(1).getSubtitle())
                 .itemUrl(searchResults.get(1).getLink())
-                .imageUrl("https://firstdraftnews.org/wp-content/uploads/2015/11/Hero-Twitter-search.png")
+                .imageUrl("https://vignette.wikia.nocookie.net/tvpedia/images/1/12/Wikipedia.png/revision/latest?cb=20120705121051&path-prefix=ru")
                 .buttons(secondLink)
                 .toList()
                 .addElement(searchResults.get(2).getTitle())
                 .subtitle(searchResults.get(2).getSubtitle())
                 .itemUrl(searchResults.get(2).getLink())
-                .imageUrl("https://firstdraftnews.org/wp-content/uploads/2015/11/Hero-Twitter-search.png")
+                .imageUrl("https://vignette.wikia.nocookie.net/tvpedia/images/1/12/Wikipedia.png/revision/latest?cb=20120705121051&path-prefix=ru")
                 .buttons(thirdtLink)
                 .toList()
                 .addElement("All results " + countResult)
-                .subtitle("Twitter Search Result")
-                .itemUrl(("https://twitter.com/search?q=").concat(keyword))
-                .imageUrl("hhttps://firstdraftnews.org/wp-content/uploads/2015/11/Hero-Twitter-search.png")
+                .subtitle("Wiki Search result")
+                .itemUrl(("https://en.wikipedia.org/wiki/").concat(keyword))
+                .imageUrl("https://vignette.wikia.nocookie.net/tvpedia/images/1/12/Wikipedia.png/revision/latest?cb=20120705121051&path-prefix=ru")
                 .buttons(searchLink)
                 .toList()
                 .done()
                 .build();
 
         this.sendClient.sendTemplate(recipientId, genericTemplate);
-    }*/
+    }
 
     private void sendTypingOn(String recipientId) throws MessengerApiException, MessengerIOException {
         this.sendClient.sendSenderAction(recipientId, SenderAction.TYPING_ON);
@@ -323,7 +323,7 @@ public class CallBackHandler {
 
             if (messageIds != null) {
                 messageIds.forEach(messageId ->
-                    logger.info("Received delivery confirmation for message '{}'", messageId)
+                        logger.info("Received delivery confirmation for message '{}'", messageId)
                 );
             }
 
