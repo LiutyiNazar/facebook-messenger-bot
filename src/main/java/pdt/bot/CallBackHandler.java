@@ -161,7 +161,7 @@ public class CallBackHandler {
     private void sendLyricRessult(String recipientId, String keyword) throws MessengerApiException, MessengerIOException, IOException {
         String URL = "http://www.lyricsfreak.com/search.php?a=search&type=song&q=";
 
-        if(keyword.matches("[\\s\\p{L}\\p{M}&&[^\\p{Alpha}]]+")) {
+       /* if(keyword.matches("[\\s\\p{L}\\p{M}&&[^\\p{Alpha}]]+")) {
             List<String> artists = new ArrayList<String>();
             List<String> songs = new ArrayList<String>();
             List<String> link = new ArrayList<String>();
@@ -188,7 +188,7 @@ public class CallBackHandler {
             String a = (songs.get(0) + "\n" + link.get(0));
 
             this.sendClient.sendTextMessage(recipientId, a);
-        }else this.sendClient.sendTextMessage(recipientId, "Please use only English language, ty ;)");
+        }else */this.sendClient.sendTextMessage(recipientId, "Please use only English language, ty ;)");
     }
 
     private void sendTypingOn(String recipientId) throws MessengerApiException, MessengerIOException {
