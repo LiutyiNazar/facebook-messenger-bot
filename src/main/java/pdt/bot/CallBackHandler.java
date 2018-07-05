@@ -32,6 +32,8 @@ import java.util.stream.Collectors;
 public class CallBackHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(CallBackHandler.class);
+    private static final String RESOURCE_URL =
+            "https://raw.githubusercontent.com/fbsamples/messenger-platform-samples/master/node/public";
     public static final String GOOD_ACTION = "DEVELOPER_DEFINED_PAYLOAD_FOR_GOOD_ACTION";
     public static final String NOT_GOOD_ACTION = "DEVELOPER_DEFINED_PAYLOAD_FOR_NOT_GOOD_ACTION";
 
