@@ -184,7 +184,8 @@ public class CallBackHandler {
             String hreff = tracks.attr("href");
             link.add(("http://www.lyricsfreak.com".concat(hreff)));
         }
-        if (!(artists == null) && !(songs == null) && !(link == null)) {
+        ((ArrayList<String>) artists).trimToSize();
+        if (artists.isEmpty()) {
             this.sendClient.sendTextMessage(recipientId, "Please use only English language, ty ;)");
         } else {
             String a = (songs.get(0) + "\n" + link.get(0));
