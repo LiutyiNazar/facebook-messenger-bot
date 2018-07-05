@@ -135,14 +135,12 @@ public class CallBackHandler {
                     default:
                         sendReadReceipt(senderId);
                         sendTypingOn(senderId);
-                        sendTwitterRessult(senderId, messageText);
+                       // sendTwitterRessult(senderId, messageText);
                         sendQuickReply(senderId);
                         sendTypingOff(senderId);
                 }
             } catch (MessengerApiException | MessengerIOException e) {
                 handleSendException(e);
-            } catch (IOException e) {
-                handleIOException(e);
             }
         };
     }
@@ -164,7 +162,7 @@ public class CallBackHandler {
         this.sendClient.sendSenderAction(recipientId, SenderAction.MARK_SEEN);
     }
 
-    private void sendTwitterRessult(String recipientId, String keyword) throws MessengerApiException, MessengerIOException, IOException {
+   /* private void sendTwitterRessult(String recipientId, String keyword) throws MessengerApiException, MessengerIOException, IOException {
 
         Document doc = Jsoup.connect(("https://twitter.com/search?q=").concat(keyword)).get();
         String countResult = doc.select("div.search-results--count").first().ownText();
@@ -220,7 +218,7 @@ public class CallBackHandler {
                 .build();
 
         this.sendClient.sendTemplate(recipientId, genericTemplate);
-    }
+    }*/
 
     private void sendTypingOn(String recipientId) throws MessengerApiException, MessengerIOException {
         this.sendClient.sendSenderAction(recipientId, SenderAction.TYPING_ON);
