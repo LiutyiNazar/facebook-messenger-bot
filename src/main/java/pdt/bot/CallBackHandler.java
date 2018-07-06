@@ -160,8 +160,6 @@ public class CallBackHandler {
 
     private void sendLyricRessult(String recipientId, String keyword) throws MessengerApiException, MessengerIOException, IOException {
         String URL = "http://www.lyricsfreak.com/search.php?a=search&type=song&q=";
-
-        //
         List<String> artists = new ArrayList<String>();
         List<String> songs = new ArrayList<String>();
         List<String> link = new ArrayList<String>();

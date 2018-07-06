@@ -14,7 +14,6 @@ public class PdtBotApplication {
 
     private static final Logger logger = LoggerFactory.getLogger(PdtBotApplication.class);
 
-    @Bean
     public MessengerSendClient messengerSendClient(@Value("${messenger4j.pageAccessToken}") String pageAccessToken) {
         logger.debug("Initializing MessengerSendClient - pageAccessToken: {}", pageAccessToken);
         return MessengerPlatform.newSendClientBuilder(pageAccessToken).build();
